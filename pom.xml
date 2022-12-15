@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.winkensjw</groupId>
+    <artifactId>bothamsta</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>twitch</module>
+        <module>server</module>
+        <module>twitter</module>
+        <module>platform</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bothamsta.version>1.0-SNAPSHOT</bothamsta.version>
+        <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.version>2.14.3.Final</quarkus.platform.version>
+        <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
+        <twitter.sdk.version>2.0.3</twitter.sdk.version>
+        <twitch4j.version>1.12.0</twitch4j.version>
+        <jooq.version>3.17.6</jooq.version>
+        <postgresql.version>42.5.1</postgresql.version>
+        <wisp.version>2.3.0</wisp.version>
+    </properties>
+
+    <!-- DEPENDENCY MANAGEMENT -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-rest-client-reactive-jackson</artifactId>
+                <version>${quarkus.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.winkensjw</groupId>
+                <artifactId>server</artifactId>
+                <version>${bothamsta.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.winkensjw</groupId>
+                <artifactId>platform</artifactId>
+                <version>${bothamsta.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.winkensjw</groupId>
+                <artifactId>twitch</artifactId>
+                <version>${bothamsta.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.winkensjw</groupId>
+                <artifactId>twitter</artifactId>
+                <version>${bothamsta.version}</version>
+            </dependency>
+
+            <!-- TWITCH -->
+            <dependency>
+                <groupId>com.github.twitch4j</groupId>
+                <artifactId>twitch4j</artifactId>
+                <version>${twitch4j.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-configuration</groupId>
+                        <artifactId>commons-configuration</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- TWITTER -->
+            <dependency>
+                <groupId>com.twitter</groupId>
+                <artifactId>twitter-api-java-sdk</artifactId>
+                <version>${twitter.sdk.version}</version>
+            </dependency>
+
+            <!-- SCHEDULER -->
+            <dependency>
+                <groupId>com.coreoz</groupId>
+                <artifactId>wisp</artifactId>
+                <version>${wisp.version}</version>
+            </dependency>
+
+            <!-- DB -->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>${jooq.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+
+            <!-- These may not be required, unless you use the GenerationTool manually for code generation -->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-meta</artifactId>
+                <version>${jooq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen</artifactId>
+                <version>${jooq.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

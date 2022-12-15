@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f9754d3a-005c-4aab-bc62-4ae3e1ac0f8f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/java/org/winkensjw/platform/components/ComponentsRegistry.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/java/org/winkensjw/platform/components/IComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/java/org/winkensjw/platform/configuration/BothamstaServerProperties.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/java/org/winkensjw/platform/configuration/property/AbstractBooleanProperty.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/java/org/winkensjw/platform/configuration/property/AbstractLongProperty.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/java/org/winkensjw/platform/configuration/property/AbstractProperty.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/java/org/winkensjw/platform/configuration/property/AbstractStringProperty.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/java/org/winkensjw/platform/configuration/util/CONFIG.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform/src/main/resources/META-INF/beans.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sdk.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/org/winkensjw/server/AbstractServerApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/org/winkensjw/server/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/org/winkensjw/server/ServerApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/org/winkensjw/server/db/DB.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/resources/META-INF/resources/beans.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/resources/META-INF/resources/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/resources/jooq-config.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/TwitchChannelNames.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/TwitchComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/chatbot/TwitchBot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/chatbot/chatrules/engine/AbstractChatMessageRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/chatbot/chatrules/engine/AbstractChatRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/chatbot/chatrules/engine/AbstractCommandChatRule.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/chatbot/chatrules/engine/ChatRuleInventory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/chatbot/chatrules/engine/ChatRuleProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/chatbot/chatrules/engine/TwitchMessageEventHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/java/org/winkensjw/twitch/chatbot/chatrules/lufthamsta/LufthamstaChannelRules.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitch/src/main/resources/META-INF/beans.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitter/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitter/src/main/java/org/winkensjw/twitter/BothamstaTwitterApiClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitter/src/main/java/org/winkensjw/twitter/TwitterComponent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitter/src/main/java/org/winkensjw/twitter/auth/AuthCodeResource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitter/src/main/java/org/winkensjw/twitter/auth/TwitterAuthenticator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/twitter/src/main/resources/META-INF/beans.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="workspaceImportEnabled" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectId" id="2IxuP9DZhpggEqQThgYZWahy2vt" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="flattenPackages" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "jdk.selected.JAVA_MODULE": "17",
+    "last_opened_file_path": "D:/development/jwi-projects/bothamsta/platform/src/main/resources/META-INF",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\development\jwi-projects\bothamsta\platform\src\main\resources\META-INF" />
+      <recent name="D:\development\jwi-projects\bothamsta\twitch\src\main\resources" />
+      <recent name="D:\development\jwi-projects\bothamsta\platform\src\main\java\org\winkensjw\platform\components" />
+      <recent name="D:\development\jwi-projects\bothamsta\twitter\src\main\resources" />
+      <recent name="D:\development\jwi-projects\bothamsta\server\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\development\jwi-projects\bothamsta\twitter\src\main\resources\META-INF" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f9754d3a-005c-4aab-bc62-4ae3e1ac0f8f" name="Changes" comment="" />
+      <created>1671135530574</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1671135530574</updated>
+    </task>
+    <servers />
+  </component>
+</project>
