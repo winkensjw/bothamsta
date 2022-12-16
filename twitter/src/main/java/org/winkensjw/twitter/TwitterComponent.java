@@ -19,17 +19,14 @@ import org.winkensjw.twitter.auth.TwitterAuthenticator;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class TwitterComponent implements IComponent {
 
     private static final Logger LOG = Logger.getLogger(TwitterComponent.class);
 
     private TwitterCredentialsOAuth2 m_authToken = null;
-    private Scheduler m_scheduler = new Scheduler();
+    private final Scheduler m_scheduler = new Scheduler();
 
     public void setAuthToken(TwitterCredentialsOAuth2 authToken) {
         m_authToken = authToken;
@@ -64,7 +61,7 @@ public class TwitterComponent implements IComponent {
     }
 
     protected void startLiking() {
-        getScheduler().schedule(() -> likeTweets(),
+        getScheduler().schedule(this::likeTweets,
                 Schedules.afterInitialDelay(
                         Schedules.fixedDelaySchedule(
                                 Duration.ofMinutes(CONFIG.get(TwitterMaxTweetAgeMinutesProperty.class))),
@@ -94,7 +91,7 @@ public class TwitterComponent implements IComponent {
         OffsetDateTime startTime = OffsetDateTime.now().minus(CONFIG.get((TwitterMaxTweetAgeMinutesProperty.class)),
                 ChronoUnit.MINUTES);
         OffsetDateTime endTime = OffsetDateTime.now().minus(11, ChronoUnit.SECONDS);
-        return apiInstance.tweets()
+        List<Tweet> tweets = apiInstance.tweets()
                 .tweetsRecentSearch(searchString)
                 .startTime(startTime)
                 .endTime(endTime)
@@ -102,6 +99,7 @@ public class TwitterComponent implements IComponent {
                 .sortOrder("recency")
                 .tweetFields(tweetFields)
                 .execute().getData();
+        return tweets != null ? tweets : Collections.emptyList();
     }
 
     protected void likeTweet(TwitterApi apiInstance, Tweet tweet) throws ApiException {
@@ -140,7 +138,6 @@ public class TwitterComponent implements IComponent {
             wait(new Random().nextInt(4000) + 1000);
         } catch (InterruptedException e) {
             LOG.error("Interrupted while waiting to next like!", e);
-            return;
         }
     }
 }
