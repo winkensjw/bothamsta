@@ -103,6 +103,10 @@ public class TwitterComponent implements IComponent {
     }
 
     protected void likeTweet(TwitterApi apiInstance, Tweet tweet) throws ApiException {
+        if (CONFIG.get(TwitterLikeUserIdProperty.class).equals(tweet.getAuthorId())) {
+            // don't like your own tweets
+            return;
+        }
         UsersLikesCreateRequest request = new UsersLikesCreateRequest().tweetId(tweet.getId());
         apiInstance.tweets()
                 .usersIdLike(CONFIG.get(TwitterLikeUserIdProperty.class))
