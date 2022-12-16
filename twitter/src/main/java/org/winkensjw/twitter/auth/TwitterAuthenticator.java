@@ -6,12 +6,13 @@ import com.github.scribejava.core.pkce.PKCECodeChallengeMethod;
 import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.auth.TwitterOAuth20Service;
 import org.jboss.logging.Logger;
-import org.winkensjw.platform.components.ComponentsRegistry;
 import org.winkensjw.platform.configuration.BothamstaServerProperties.TwitterClientIDProperty;
 import org.winkensjw.platform.configuration.BothamstaServerProperties.TwitterClientSecretProperty;
 import org.winkensjw.platform.configuration.util.CONFIG;
 import org.winkensjw.twitter.TwitterComponent;
 
+import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.CDI;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -22,7 +23,7 @@ public class TwitterAuthenticator {
 
     private static final Logger LOG = Logger.getLogger(TwitterAuthenticator.class);
 
-    private TwitterOAuth20Service m_service;
+    private final TwitterOAuth20Service m_service;
 
     public TwitterAuthenticator() {
         TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(CONFIG.get(TwitterClientIDProperty.class),
@@ -49,7 +50,7 @@ public class TwitterAuthenticator {
     }
 
     public void authenticate() {
-        String authorizationUrl = m_service.getAuthorizationUrl(getPkce(), "state");
+        String authorizationUrl = getService().getAuthorizationUrl(getPkce(), "state");
 
         LOG.infov("Requesting auth code at {0}", authorizationUrl);
         Desktop desktop = Desktop.getDesktop();
@@ -63,7 +64,7 @@ public class TwitterAuthenticator {
     public void processAuthCode(String authCode) {
         OAuth2AccessToken accessToken;
         try {
-            accessToken = m_service.getAccessToken(getPkce(), authCode);
+            accessToken = getService().getAccessToken(getPkce(), authCode);
         } catch (IOException | ExecutionException | InterruptedException e) {
             LOG.error("Error trying to get access token", e);
             return;
@@ -76,14 +77,14 @@ public class TwitterAuthenticator {
                 accessToken.getAccessToken(),
                 accessToken.getRefreshToken());
 
-        TwitterComponent component = ComponentsRegistry.getComponent(TwitterComponent.class);
-        component.setAuthToken(authToken);
+        Instance<TwitterComponent> twitterComponent = CDI.current().select(TwitterComponent.class);
+        twitterComponent.get().setAuthToken(authToken);
     }
 
     public TwitterCredentialsOAuth2 refreshAccessToken(TwitterCredentialsOAuth2 token) {
         OAuth2AccessToken accessToken;
         try {
-            accessToken = m_service.refreshAccessToken(token.getTwitterOauth2RefreshToken());
+            accessToken = getService().refreshAccessToken(token.getTwitterOauth2RefreshToken());
             token.setTwitterOauth2AccessToken(accessToken.getAccessToken());
             token.setTwitterOauth2RefreshToken(accessToken.getRefreshToken());
             return token;
