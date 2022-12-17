@@ -120,6 +120,13 @@ public class BothamstaProperties {
         }
     }
 
+    public static class YoutubeApiKeyProperty extends AbstractStringProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.youtube.apiKey";
+        }
+    }
+
     public static class YoutubeChannelNameProperty extends AbstractStringProperty {
         @Override
         public String getId() {

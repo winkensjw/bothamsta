@@ -168,7 +168,7 @@ public class YoutubeComponent implements IComponent {
 
     protected YouTube getService() throws GeneralSecurityException, IOException {
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        return new Builder(httpTransport, JSON_FACTORY, request -> request.setInterceptor(intercepted -> intercepted.getUrl().set("key", "AIzaSyCB9K5uCPUE21-0Ne79BM2dlfdVBOz6FVk")))
+        return new Builder(httpTransport, JSON_FACTORY, request -> request.setInterceptor(intercepted -> intercepted.getUrl().set("key", CONFIG.get(YoutubeApiKeyProperty.class))))
                 .setApplicationName(CONFIG.get(YoutubeBotNameProperty.class))
                 .build();
     }
