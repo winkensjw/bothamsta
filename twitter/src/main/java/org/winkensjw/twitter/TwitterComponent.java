@@ -6,16 +6,24 @@ import com.twitter.clientlib.ApiException;
 import com.twitter.clientlib.Configuration;
 import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.api.TwitterApi;
-import com.twitter.clientlib.model.Tweet;
-import com.twitter.clientlib.model.UsersLikesCreateRequest;
+import com.twitter.clientlib.model.*;
 import org.jboss.logging.Logger;
 import org.winkensjw.platform.components.IComponent;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.TwitterLikeUserIdProperty;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.TwitterMaxTweetAgeMinutesProperty;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.TwitterSearchQueryProperty;
+import org.winkensjw.platform.components.IComponentNotification;
+import org.winkensjw.platform.components.TwitterCreateTweetComponentNotification;
+import org.winkensjw.platform.configuration.BothamstaProperties.*;
 import org.winkensjw.platform.configuration.util.CONFIG;
+import org.winkensjw.platform.util.StringUtility;
 import org.winkensjw.twitter.auth.TwitterAuthenticator;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.v1.UploadedMedia;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
@@ -42,14 +50,10 @@ public class TwitterComponent implements IComponent {
 
     @Override
     public void start() {
-        LOG.info("Starting twitter component.");
+        LOG.info("Starting twitter component...");
         TwitterAuthenticator authenticator = new TwitterAuthenticator();
         authenticator.authenticate();
-
         waitForAuthToken();
-
-        LOG.info("Authentication successful.");
-
         startLiking();
     }
 
@@ -58,6 +62,12 @@ public class TwitterComponent implements IComponent {
         bothamstaTwitterApiClient.setTwitterCredentials(getAuthToken());
         Configuration.setDefaultApiClient(bothamstaTwitterApiClient);
         return new TwitterApi(bothamstaTwitterApiClient);
+    }
+
+    protected Twitter getMediaApi() {
+        return Twitter.newBuilder()
+                .oAuthConsumer(CONFIG.get(TwitterOAuthConsumerKeyProperty.class), CONFIG.get(TwitterOAuthConsumerSecretProperty.class))
+                .oAuthAccessToken(CONFIG.get(TwitterOAuthAccessTokenProperty.class), CONFIG.get(TwitterOAuthAccessTokenSecretProperty.class)).build();
     }
 
     protected void startLiking() {
@@ -102,6 +112,45 @@ public class TwitterComponent implements IComponent {
         return tweets != null ? tweets : Collections.emptyList();
     }
 
+    protected void writeTweet(String text, String imgUrl) throws ApiException {
+        Long imgId = uploadMedia(imgUrl);
+        TweetCreateRequest tweet = new TweetCreateRequest().text(text);
+        if (imgId != null) {
+            tweet.media(new TweetCreateRequestMedia()
+                    .mediaIds(List.of(String.valueOf(imgId))));
+        }
+        TweetCreateResponse response = getApi().tweets().createTweet(tweet).execute();
+        LOG.infov("Tweeted: {0}", response);
+    }
+
+    protected Long uploadMedia(String imgUrl) {
+        File image = downloadImage(imgUrl);
+        if (image == null) {
+            return null;
+        }
+        try {
+            UploadedMedia media = getMediaApi().v1().tweets().uploadMedia(image);
+            return media.getMediaId();
+        } catch (TwitterException e) {
+            LOG.errorv(e, "Failed to upload image to twitter. URL: {0}", imgUrl);
+            return null;
+        }
+    }
+
+    protected File downloadImage(String imageUrl) {
+        try {
+            URL url = new URL(imageUrl);
+            BufferedImage dlImage = ImageIO.read(url);
+            File image = File.createTempFile(UUID.randomUUID().toString(), ".jpg");
+            ImageIO.write(dlImage, "jpg", image);
+            return image;
+        } catch (IOException e) {
+            LOG.errorv(e, "Failed to download image. URL: {0}", imageUrl);
+            return null;
+        }
+    }
+
+
     protected void likeTweet(TwitterApi apiInstance, Tweet tweet) throws ApiException {
         if (CONFIG.get(TwitterLikeUserIdProperty.class).equals(tweet.getAuthorId())) {
             // don't like your own tweets
@@ -115,14 +164,18 @@ public class TwitterComponent implements IComponent {
     }
 
     protected void printTweetInfo(Tweet tweet, int number) {
-        LOG.info("\nTweet Info: \n"
-                + "--------------------------------------------------------\n"
-                + "No: " + number + "\n"
-                + "ID: " + tweet.getId() + "\n"
-                + "Language: " + tweet.getLang() + "\n"
-                + "Author ID: " + tweet.getAuthorId() + "\n"
-                + "Text: \n" + tweet.getText() + "\n"
-                + "--------------------------------------------------------\n");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("\nTweet Info: \n"
+                    + "--------------------------------------------------------\n"
+                    + "No: " + number + "\n"
+                    + "ID: " + tweet.getId() + "\n"
+                    + "Language: " + tweet.getLang() + "\n"
+                    + "Author ID: " + tweet.getAuthorId() + "\n"
+                    + "Text: \n" + tweet.getText() + "\n"
+                    + "--------------------------------------------------------\n");
+        } else {
+            LOG.infov("Tweet by {0} with text: {1} media: {2}", tweet.getAuthorId(), StringUtility.removeLinebreaks(tweet.getText()));
+        }
     }
 
     protected synchronized void waitForAuthToken() {
@@ -142,6 +195,17 @@ public class TwitterComponent implements IComponent {
             wait(new Random().nextInt(4000) + 1000);
         } catch (InterruptedException e) {
             LOG.error("Interrupted while waiting to next like!", e);
+        }
+    }
+
+    @Override
+    public void handleNotification(IComponentNotification notification) {
+        try {
+            if (notification instanceof TwitterCreateTweetComponentNotification twitterNotifation) {
+                writeTweet(twitterNotifation.getText(), twitterNotifation.getImgUrl());
+            }
+        } catch (Exception e) {
+            LOG.error("Error handling notification!", e);
         }
     }
 }

@@ -4,10 +4,10 @@ import org.winkensjw.platform.configuration.property.AbstractBooleanProperty;
 import org.winkensjw.platform.configuration.property.AbstractLongProperty;
 import org.winkensjw.platform.configuration.property.AbstractStringProperty;
 
-// FIXME jwi move properties
-public class BothamstaServerProperties {
+// FIXME jwi move/spli properties
+public class BothamstaProperties {
 
-    private BothamstaServerProperties() {
+    private BothamstaProperties() {
         // no instance needed, just classes
     }
 
@@ -78,6 +78,75 @@ public class BothamstaServerProperties {
         @Override
         public String getId() {
             return "bothamsta.server.twitter.likeUserId";
+        }
+    }
+
+    public static class TwitterOAuthConsumerKeyProperty extends AbstractStringProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.twitter.oAuthConsumerKey";
+        }
+    }
+
+
+    public static class TwitterOAuthConsumerSecretProperty extends AbstractStringProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.twitter.oAuthConsumerSecret";
+        }
+    }
+
+
+    public static class TwitterOAuthAccessTokenProperty extends AbstractStringProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.twitter.oAuthAccessToken";
+        }
+    }
+
+
+    public static class TwitterOAuthAccessTokenSecretProperty extends AbstractStringProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.twitter.oAuthAccessTokenSecret";
+        }
+    }
+
+
+    public static class YoutubeBotNameProperty extends AbstractStringProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.youtube.botName";
+        }
+    }
+
+    public static class YoutubeChannelNameProperty extends AbstractStringProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.youtube.channelName";
+        }
+    }
+
+
+    public static class YoutubeChannelUploadsPlaylistIdProperty extends AbstractStringProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.youtube.channelUploadsPlaylistId";
+        }
+    }
+
+
+    public static class YoutubeCheckUploadsIntervalMinutesProperty extends AbstractLongProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.youtube.checkUploadsIntervalMinutes";
+        }
+    }
+
+    public static class YoutubeMaxPlaylistItemsProperty extends AbstractLongProperty {
+        @Override
+        public String getId() {
+            return "bothamsta.server.youtube.maxPlaylistItems";
         }
     }
 }

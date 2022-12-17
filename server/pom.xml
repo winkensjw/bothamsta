@@ -25,25 +25,9 @@
             <groupId>org.winkensjw</groupId>
             <artifactId>twitch</artifactId>
         </dependency>
-
-        <!-- DB -->
         <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
-        <!-- These may not be required, unless you use the GenerationTool manually for code generation -->
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-meta</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jooq</groupId>
-            <artifactId>jooq-codegen</artifactId>
+            <groupId>org.winkensjw</groupId>
+            <artifactId>youtube</artifactId>
         </dependency>
     </dependencies>
 
@@ -82,25 +66,6 @@
                         <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
                         <maven.home>${maven.home}</maven.home>
                     </systemPropertyVariables>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq-codegen-maven</artifactId>
-                <version>3.17.6</version>
-
-                <executions>
-                    <execution>
-                        <id>jooq-codegen</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-
-                <configuration>
-                    <configurationFile>\src\main\resources\jooq-config.xml</configurationFile>
                 </configuration>
             </plugin>
         </plugins>

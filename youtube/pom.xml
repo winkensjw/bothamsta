@@ -9,7 +9,14 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>twitter</artifactId>
+    <artifactId>youtube</artifactId>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
 
     <!-- DEPENDENCIES -->
     <dependencies>
@@ -17,14 +24,14 @@
             <groupId>org.winkensjw</groupId>
             <artifactId>platform</artifactId>
         </dependency>
-        <!-- TWITTER -->
+        <!-- YOUTUBE -->
         <dependency>
-            <groupId>com.twitter</groupId>
-            <artifactId>twitter-api-java-sdk</artifactId>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.twitter4j</groupId>
-            <artifactId>twitter4j-core</artifactId>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-youtube</artifactId>
         </dependency>
     </dependencies>
 </project>

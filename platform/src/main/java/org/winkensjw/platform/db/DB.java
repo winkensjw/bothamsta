@@ -1,17 +1,18 @@
-package org.winkensjw.server.db;
+package org.winkensjw.platform.db;
 
 import org.jboss.logging.Logger;
 import org.jooq.Record;
 import org.jooq.*;
 import org.jooq.impl.DSL;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.DbJdbcUrlProperty;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.DbPasswordProperty;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.DbUserNameProperty;
+import org.winkensjw.platform.configuration.BothamstaProperties.DbJdbcUrlProperty;
+import org.winkensjw.platform.configuration.BothamstaProperties.DbPasswordProperty;
+import org.winkensjw.platform.configuration.BothamstaProperties.DbUserNameProperty;
 import org.winkensjw.platform.configuration.util.CONFIG;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.function.Function;
 
 public class DB {
 
@@ -27,26 +28,33 @@ public class DB {
         return DriverManager.getConnection(url, userName, password);
     }
 
-    protected static Result<Record> connectAndFetch(String sql) {
+    protected static <V> V callWithConnection(Function<DSLContext, V> func) {
         try (Connection conn = getConnection()) {
             DSLContext context = DSL.using(conn, SQLDialect.POSTGRES);
-            return context.fetch(sql);
+            return func.apply(context);
         } catch (SQLException e) {
             LOG.error("Error creating database connection!", e);
             throw new RuntimeException(e);
         }
     }
 
-    public static Result<Record> list(String sql) {
-        return connectAndFetch(sql);
+    public static <R extends Record> Result<R> list(ResultQuery<R> query) {
+        return callWithConnection(ctx -> ctx.fetch(query));
     }
 
     public static Record uniqueResult(String sql) {
-        Result<Record> result = connectAndFetch(sql);
-        return result.isEmpty() ? null : result.get(0);
+        return callWithConnection(ctx -> ctx.fetchOne(sql));
     }
 
-    public static SelectSelectStep<Record> select() {
-        return DSL.using(SQLDialect.POSTGRES).select();
+    public static int count(Table<?> table) {
+        return callWithConnection(ctx -> ctx.fetchCount(table));
+    }
+
+    public static void insertInto(TableRecord<?> record) {
+        callWithConnection(ctx -> ctx.executeInsert(record));
+    }
+
+    public static DSLContext createQuery() {
+        return DSL.using(SQLDialect.POSTGRES);
     }
 }

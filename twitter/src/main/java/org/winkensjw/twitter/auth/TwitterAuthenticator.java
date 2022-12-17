@@ -6,13 +6,12 @@ import com.github.scribejava.core.pkce.PKCECodeChallengeMethod;
 import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.auth.TwitterOAuth20Service;
 import org.jboss.logging.Logger;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.TwitterClientIDProperty;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.TwitterClientSecretProperty;
+import org.winkensjw.platform.components.ComponentsRegistry;
+import org.winkensjw.platform.configuration.BothamstaProperties.TwitterClientIDProperty;
+import org.winkensjw.platform.configuration.BothamstaProperties.TwitterClientSecretProperty;
 import org.winkensjw.platform.configuration.util.CONFIG;
 import org.winkensjw.twitter.TwitterComponent;
 
-import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.CDI;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -34,7 +33,7 @@ public class TwitterAuthenticator {
                 credentials.getTwitterOauth2ClientId(),
                 credentials.getTwitterOAuth2ClientSecret(),
                 "http://localhost:8080/auth/code",
-                "offline.access tweet.read users.read like.write");
+                "offline.access tweet.read tweet.write users.read like.write");
     }
 
     public TwitterOAuth20Service getService() {
@@ -77,8 +76,9 @@ public class TwitterAuthenticator {
                 accessToken.getAccessToken(),
                 accessToken.getRefreshToken());
 
-        Instance<TwitterComponent> twitterComponent = CDI.current().select(TwitterComponent.class);
-        twitterComponent.get().setAuthToken(authToken);
+        // FIXME JWI use notifications
+        TwitterComponent component = ComponentsRegistry.get(TwitterComponent.class);
+        component.setAuthToken(authToken);
     }
 
     public TwitterCredentialsOAuth2 refreshAccessToken(TwitterCredentialsOAuth2 token) {

@@ -13,5 +13,7 @@
     <file url="file://$PROJECT_DIR$/twitch/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/twitter/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/twitter/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/youtube/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/youtube/src/main/resources" charset="UTF-8" />
   </component>
 </project>

@@ -6,8 +6,8 @@ import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import org.jboss.logging.Logger;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.DebugProperty;
-import org.winkensjw.platform.configuration.BothamstaServerProperties.TwitchOAuthTokenProperty;
+import org.winkensjw.platform.configuration.BothamstaProperties.DebugProperty;
+import org.winkensjw.platform.configuration.BothamstaProperties.TwitchOAuthTokenProperty;
 import org.winkensjw.platform.configuration.util.CONFIG;
 import org.winkensjw.twitch.chatbot.chatrules.engine.AbstractChatRule;
 import org.winkensjw.twitch.chatbot.chatrules.engine.AbstractCommandChatRule;
@@ -20,7 +20,7 @@ public class TwitchBot {
     private static final Logger LOG = Logger.getLogger(TwitchBot.class);
 
     private static final TwitchBot m_bot = new TwitchBot();
-    private TwitchClient m_twitchClient;
+    private final TwitchClient m_twitchClient;
 
     private TwitchBot() {
         // chat credential
@@ -34,10 +34,8 @@ public class TwitchBot {
 
         // install debug handler
         if (CONFIG.get(DebugProperty.class)) {
-            getTwitchClient().getEventManager().onEvent(ChannelMessageEvent.class, event -> {
-                LOG.info("[" + event.getChannel().getName() + "][" + event.getPermissions().toString() + "] "
-                        + event.getUser().getName() + ": " + event.getMessage());
-            });
+            getTwitchClient().getEventManager().onEvent(ChannelMessageEvent.class, event -> LOG.info("[" + event.getChannel().getName() + "][" + event.getPermissions().toString() + "] "
+                    + event.getUser().getName() + ": " + event.getMessage()));
         }
     }
 
@@ -56,6 +54,7 @@ public class TwitchBot {
         LOG.infov("Joined channel: {0}", channelName);
     }
 
+    @SuppressWarnings("unused")
     public void leaveChannel(String channelName) {
         LOG.infov("Leaving channel: {0}", channelName);
         getTwitchClient().getChat().leaveChannel(channelName);
@@ -77,8 +76,7 @@ public class TwitchBot {
 
     protected void registerRule(AbstractChatRule chatRule) {
         LOG.infov("Register rule: {0}", chatRule.getClass().getName());
-        if (chatRule instanceof AbstractCommandChatRule) {
-            AbstractCommandChatRule commandRule = (AbstractCommandChatRule) chatRule;
+        if (chatRule instanceof AbstractCommandChatRule commandRule) {
             getTwitchClient().getEventManager().onEvent(commandRule.getId(), ChannelMessageEvent.class,
                     commandRule::applyRule);
         }
