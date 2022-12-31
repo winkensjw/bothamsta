@@ -112,7 +112,7 @@ public final class LufthamstaChannelRules implements ChatRuleProvider {
 
         @Override
         protected String getConfiguredMessage(ChannelMessageEvent event) {
-            return "Du möchtest Emotes nutzen? Dann installier dir 7TV: https://7tv.app/";
+            return "Du möchtest Emotes sehen/nutzen? Dann installier dir die 7TV Browser-Extension: https://7tv.app/ pepeMoney ICANT GIGACHAD VIBE";
         }
     }
 
@@ -124,7 +124,7 @@ public final class LufthamstaChannelRules implements ChatRuleProvider {
 
         @Override
         protected String getConfiguredMessage() {
-            return "Du möchtest Emotes sehen/nutzen? Dann installier dir die 7TV Browser-Extension: https://7tv.app/";
+            return "Du möchtest Emotes sehen/nutzen? Dann installier dir die 7TV Browser-Extension: https://7tv.app/ pepeMoney ICANT GIGACHAD VIBE";
         }
     }
 
