@@ -41,9 +41,14 @@ public class YoutubeComponent implements IComponent {
     private static final String VIDEO_TITLE_SEPARATOR = "|";
     private static final String VIDEO_HASH_TAG_CHAR = "#";
     private static final String VIDEO_TITLE_LETS_PLAY = "(Let's Play)";
+    private static final String VIDEO_TITLE_ANGESPIELT = "(Angespielt)";
 
     public Scheduler getScheduler() {
         return m_scheduler;
+    }
+
+    protected String[] getVideoTitleSuffixes() {
+        return new String[]{VIDEO_TITLE_LETS_PLAY, VIDEO_TITLE_ANGESPIELT};
     }
 
     @Override
@@ -107,7 +112,7 @@ public class YoutubeComponent implements IComponent {
         // title is of format <TITLE> | <GAME> (Let's Play)
         // transform to tweet text <TITLE> #<GAME WITHOUT SPACES>
         String actualTitle = title.substring(0, separatorPos);
-        String game = StringUtility.removeSuffixes(title.substring(separatorPos + 1), VIDEO_TITLE_LETS_PLAY);
+        String game = StringUtility.removeSuffixes(title.substring(separatorPos + 1), getVideoTitleSuffixes());
         String gameHashTag = game.replace(" ", "");
         return StringUtility.join(" #", actualTitle, gameHashTag);
     }

@@ -13,6 +13,6 @@ public class AuthCodeResource {
     @Path("/code")
     @Produces(MediaType.APPLICATION_JSON)
     public void code(@QueryParam("code") String code) {
-        new TwitterAuthenticator().processAuthCode(code);
+        new TwitterAuthService().processAuthCode(code);
     }
 }

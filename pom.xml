@@ -34,6 +34,7 @@
         <google.api.version>1.25.0</google.api.version>
         <google.youtube.version>v3-rev222-1.25.0</google.youtube.version>
         <twitter4j.version>4.1.2</twitter4j.version>
+        <scribe.version>8.3.3</scribe.version>
     </properties>
 
     <!-- DEPENDENCY MANAGEMENT -->
@@ -135,6 +136,13 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
+            </dependency>
+
+            <!-- Auth -->
+            <dependency>
+                <groupId>com.github.scribejava</groupId>
+                <artifactId>scribejava-core</artifactId>
+                <version>${scribe.version}</version>
             </dependency>
 
             <!-- These may not be required, unless you use the GenerationTool manually for code generation -->

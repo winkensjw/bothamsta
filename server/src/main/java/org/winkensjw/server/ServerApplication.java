@@ -1,14 +1,14 @@
 package org.winkensjw.server;
 
 import org.jboss.logging.Logger;
-import org.jooq.Record;
 import org.wildfly.common.Assert;
 import org.winkensjw.platform.components.ComponentsRegistry;
 import org.winkensjw.platform.db.DB;
-import org.winkensjw.platform.db.schema.Tables;
 import org.winkensjw.twitch.TwitchComponent;
 import org.winkensjw.twitter.TwitterComponent;
 import org.winkensjw.youtube.YoutubeComponent;
+
+import static org.winkensjw.platform.db.schema.Tables.BH_DUAL;
 
 public class ServerApplication extends AbstractServerApplication {
 
@@ -23,8 +23,7 @@ public class ServerApplication extends AbstractServerApplication {
     protected void ensureDatabase() {
         LOG.info("Performing Database sanity check...");
         // check DB is available by pinging dual
-        Record record = DB.uniqueResult(DB.createQuery().selectOne().from(Tables.BH_DUAL).getSQL());
-        Assert.assertNotNull(record);
+        Assert.assertNotNull(DB.uniqueResult(DB.createQuery().select().from(BH_DUAL)));
         LOG.info("Database check successful!");
     }
 

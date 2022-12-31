@@ -59,6 +59,12 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
+        <!-- AUTH -->
+        <dependency>
+            <groupId>com.github.scribejava</groupId>
+            <artifactId>scribejava-core</artifactId>
+        </dependency>
+
         <!-- These may not be required, unless you use the GenerationTool manually for code generation -->
         <dependency>
             <groupId>org.jooq</groupId>

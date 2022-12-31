@@ -14,7 +14,7 @@ import org.winkensjw.platform.components.TwitterCreateTweetComponentNotification
 import org.winkensjw.platform.configuration.BothamstaProperties.*;
 import org.winkensjw.platform.configuration.util.CONFIG;
 import org.winkensjw.platform.util.StringUtility;
-import org.winkensjw.twitter.auth.TwitterAuthenticator;
+import org.winkensjw.twitter.auth.TwitterAuthService;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.v1.UploadedMedia;
@@ -51,14 +51,18 @@ public class TwitterComponent implements IComponent {
     @Override
     public void start() {
         LOG.info("Starting twitter component...");
-        TwitterAuthenticator authenticator = new TwitterAuthenticator();
-        authenticator.authenticate();
+        authenticateOAuth();
         waitForAuthToken();
-        startLiking();
+    }
+
+    protected void authenticateOAuth() {
+        TwitterAuthService authenticator = new TwitterAuthService();
+        authenticator.authenticate(CONFIG.get(TwitterUserIdProperty.class));
     }
 
     protected TwitterApi getApi() {
         BothamstaTwitterApiClient bothamstaTwitterApiClient = new BothamstaTwitterApiClient();
+        authenticateOAuth();
         bothamstaTwitterApiClient.setTwitterCredentials(getAuthToken());
         Configuration.setDefaultApiClient(bothamstaTwitterApiClient);
         return new TwitterApi(bothamstaTwitterApiClient);
@@ -81,8 +85,6 @@ public class TwitterComponent implements IComponent {
     protected void likeTweets() {
         try {
             int number = 1;
-            TwitterAuthenticator authenticator = new TwitterAuthenticator();
-            authenticator.refreshAccessToken(getAuthToken());
             TwitterApi apiInstance = getApi();
             for (Tweet tweet : getTweets(apiInstance)) {
                 likeTweet(apiInstance, tweet);
@@ -100,7 +102,7 @@ public class TwitterComponent implements IComponent {
         String searchString = CONFIG.get(TwitterSearchQueryProperty.class);
         OffsetDateTime startTime = OffsetDateTime.now().minus(CONFIG.get((TwitterMaxTweetAgeMinutesProperty.class)),
                 ChronoUnit.MINUTES);
-        OffsetDateTime endTime = OffsetDateTime.now().minus(11, ChronoUnit.SECONDS);
+        OffsetDateTime endTime = OffsetDateTime.now().minus(15, ChronoUnit.SECONDS);
         List<Tweet> tweets = apiInstance.tweets()
                 .tweetsRecentSearch(searchString)
                 .startTime(startTime)
@@ -152,13 +154,13 @@ public class TwitterComponent implements IComponent {
 
 
     protected void likeTweet(TwitterApi apiInstance, Tweet tweet) throws ApiException {
-        if (CONFIG.get(TwitterLikeUserIdProperty.class).equals(tweet.getAuthorId())) {
+        if (CONFIG.get(TwitterUserIdProperty.class).equals(tweet.getAuthorId())) {
             // don't like your own tweets
             return;
         }
         UsersLikesCreateRequest request = new UsersLikesCreateRequest().tweetId(tweet.getId());
         apiInstance.tweets()
-                .usersIdLike(CONFIG.get(TwitterLikeUserIdProperty.class))
+                .usersIdLike(CONFIG.get(TwitterUserIdProperty.class))
                 .usersLikesCreateRequest(request)
                 .execute();
     }
@@ -202,7 +204,7 @@ public class TwitterComponent implements IComponent {
     public void handleNotification(IComponentNotification notification) {
         try {
             if (notification instanceof TwitterCreateTweetComponentNotification twitterNotifation) {
-                writeTweet(twitterNotifation.getText(), twitterNotifation.getImgUrl());
+                // FIXME re-enable writeTweet(twitterNotifation.getText(), twitterNotifation.getImgUrl());
             }
         } catch (Exception e) {
             LOG.error("Error handling notification!", e);

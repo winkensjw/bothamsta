@@ -1,9 +1,11 @@
 package org.winkensjw.twitch.chatbot.chatrules.lufthamsta;
 
+import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
+import org.winkensjw.platform.util.StringUtility;
 import org.winkensjw.twitch.TwitchChannelNames;
 import org.winkensjw.twitch.chatbot.chatrules.engine.AbstractCommandChatRule;
+import org.winkensjw.twitch.chatbot.chatrules.engine.AbstractTimedChatRule;
 import org.winkensjw.twitch.chatbot.chatrules.engine.ChatRuleProvider;
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +19,10 @@ public final class LufthamstaChannelRules implements ChatRuleProvider {
 
         private String m_id;
         private Set<String> m_keyWords;
+
+        public String getChannelName() {
+            return TwitchChannelNames.Lufthamsta;
+        }
 
         public AbstractLufthamstaCommandRule(String id) {
             this(id, id);
@@ -36,14 +42,42 @@ public final class LufthamstaChannelRules implements ChatRuleProvider {
 
         @Override
         public String getId() {
-            return TwitchChannelNames.Lufthamsta + "-" + m_id;
+            return StringUtility.join("-", TwitchChannelNames.Lufthamsta, m_id, "command");
         }
 
         @Override
         public Set<String> getKeyWords() {
             return m_keyWords;
         }
+    }
 
+    public static abstract class AbstractLufthamstaTimedChatRule extends AbstractTimedChatRule {
+        private String m_id;
+        private int m_minimumMessagesPassed;
+        private int m_triggerTimeMinutes;
+
+        public AbstractLufthamstaTimedChatRule(String id, int minimumMessagesPassed, int triggerTimeMinutes) {
+            m_id = id;
+            m_minimumMessagesPassed = minimumMessagesPassed;
+            m_triggerTimeMinutes = triggerTimeMinutes;
+        }
+
+        public int getTriggerTimeMinutes() {
+            return m_triggerTimeMinutes;
+        }
+
+        public int getMinimumMessagesPassed() {
+            return m_minimumMessagesPassed;
+        }
+
+        public String getChannelName() {
+            return TwitchChannelNames.Lufthamsta;
+        }
+
+        @Override
+        public String getId() {
+            return StringUtility.join("-", TwitchChannelNames.Lufthamsta, m_id, "timed");
+        }
     }
 
     public static class BsgRule extends AbstractLufthamstaCommandRule {
@@ -78,7 +112,19 @@ public final class LufthamstaChannelRules implements ChatRuleProvider {
 
         @Override
         protected String getConfiguredMessage(ChannelMessageEvent event) {
-            return "Du möchtest Lufthamsta Emotes nutzen? Dann installier dir FrankerFaceZ: https://www.frankerfacez.com/";
+            return "Du möchtest Emotes nutzen? Dann installier dir 7TV: https://7tv.app/";
+        }
+    }
+
+    public static class EmotesTimedRule extends AbstractLufthamstaTimedChatRule {
+
+        public EmotesTimedRule() {
+            super("emotes", -1, 90);
+        }
+
+        @Override
+        protected String getConfiguredMessage() {
+            return "Du möchtest Emotes sehen/nutzen? Dann installier dir die 7TV Browser-Extension: https://7tv.app/";
         }
     }
 
@@ -102,6 +148,19 @@ public final class LufthamstaChannelRules implements ChatRuleProvider {
 
         @Override
         protected String getConfiguredMessage(ChannelMessageEvent event) {
+            return "Folg mir doch in dem du einfach auf das Herz klickts. Kost nix.";
+        }
+    }
+
+    public static class TimedFollowRule extends AbstractLufthamstaTimedChatRule {
+
+        public TimedFollowRule() {
+            super("follow", 5, 30);
+        }
+
+
+        @Override
+        protected String getConfiguredMessage() {
             return "Folg mir doch in dem du einfach auf das Herz klickts. Kost nix.";
         }
     }

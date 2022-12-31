@@ -74,10 +74,10 @@ public class BothamstaProperties {
         }
     }
 
-    public static class TwitterLikeUserIdProperty extends AbstractStringProperty {
+    public static class TwitterUserIdProperty extends AbstractStringProperty {
         @Override
         public String getId() {
-            return "bothamsta.server.twitter.likeUserId";
+            return "bothamsta.server.twitter.userId";
         }
     }
 

@@ -42,8 +42,9 @@ public class DB {
         return callWithConnection(ctx -> ctx.fetch(query));
     }
 
-    public static Record uniqueResult(String sql) {
-        return callWithConnection(ctx -> ctx.fetchOne(sql));
+    public static <R extends Record> R uniqueResult(ResultQuery<R> query) {
+        Result<R> rs = callWithConnection(ctx -> ctx.fetch(query));
+        return rs.isEmpty() ? null : rs.get(0);
     }
 
     public static int count(Table<?> table) {
@@ -54,7 +55,15 @@ public class DB {
         callWithConnection(ctx -> ctx.executeInsert(record));
     }
 
+    public static void store(UpdatableRecord<?> record) {
+        callWithConnection(ctx -> ctx.executeUpdate(record));
+    }
+
     public static DSLContext createQuery() {
         return DSL.using(SQLDialect.POSTGRES);
+    }
+
+    public static <T extends Record> T newRecord(Table<T> table) {
+        return callWithConnection(ctx -> ctx.newRecord(table));
     }
 }

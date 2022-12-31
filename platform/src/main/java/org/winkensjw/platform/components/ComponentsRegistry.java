@@ -27,7 +27,7 @@ public class ComponentsRegistry {
             getInstance().getRegistry().put(component.getClass().getName(), component);
             component.start();
         } catch (Exception e) {
-            LOG.errorv("Failed to start component: {}", component.getClass());
+            LOG.errorv(e, "Failed to start component: {0}", component.getClass());
         }
     }
 

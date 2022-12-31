@@ -1,8 +1,8 @@
 package org.winkensjw.twitch.chatbot.chatrules.engine;
 
-import org.winkensjw.twitch.TwitchChannelNames;
 import com.github.twitch4j.chat.TwitchChat;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
+import org.winkensjw.twitch.TwitchChannelNames;
 
 import java.util.Set;
 
@@ -32,11 +32,16 @@ public abstract class AbstractCommandChatRule extends AbstractChatMessageRule {
     }
 
     protected boolean matches(ChannelMessageEvent event) {
-        return isPermittedUser(event) && messageMatchesKeywords(event);
+        return !isBothamsta(event) && isPermittedUser(event) && isThisChat(event) && messageMatchesKeywords(event);
     }
 
     protected boolean isPermittedUser(ChannelMessageEvent event) {
-        return TwitchChannelNames.Lufthamsta.equals(event.getUser().getName());
+        // by default everyone can trigger the bot
+        return true;
+    }
+
+    protected boolean isBothamsta(ChannelMessageEvent event) {
+        return TwitchChannelNames.Bothamsta.equals(event.getUser().getName());
     }
 
     protected boolean messageMatchesKeywords(ChannelMessageEvent event) {

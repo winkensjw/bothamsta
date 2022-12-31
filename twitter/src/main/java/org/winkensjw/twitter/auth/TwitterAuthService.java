@@ -6,25 +6,23 @@ import com.github.scribejava.core.pkce.PKCECodeChallengeMethod;
 import com.twitter.clientlib.TwitterCredentialsOAuth2;
 import com.twitter.clientlib.auth.TwitterOAuth20Service;
 import org.jboss.logging.Logger;
+import org.winkensjw.platform.auth.AbstractAuthService;
 import org.winkensjw.platform.components.ComponentsRegistry;
 import org.winkensjw.platform.configuration.BothamstaProperties.TwitterClientIDProperty;
 import org.winkensjw.platform.configuration.BothamstaProperties.TwitterClientSecretProperty;
 import org.winkensjw.platform.configuration.util.CONFIG;
 import org.winkensjw.twitter.TwitterComponent;
 
-import java.awt.*;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 
-public class TwitterAuthenticator {
+public class TwitterAuthService extends AbstractAuthService {
 
-    private static final Logger LOG = Logger.getLogger(TwitterAuthenticator.class);
+    private static final Logger LOG = Logger.getLogger(TwitterAuthService.class);
 
     private final TwitterOAuth20Service m_service;
 
-    public TwitterAuthenticator() {
+    public TwitterAuthService() {
         TwitterCredentialsOAuth2 credentials = new TwitterCredentialsOAuth2(CONFIG.get(TwitterClientIDProperty.class),
                 CONFIG.get(TwitterClientSecretProperty.class),
                 null,
@@ -40,6 +38,16 @@ public class TwitterAuthenticator {
         return m_service;
     }
 
+    @Override
+    public String getAuthorizationUrl() {
+        return getService().getAuthorizationUrl(getPkce(), "state");
+    }
+
+    @Override
+    public String getServiceName() {
+        return "twitter";
+    }
+
     public PKCE getPkce() {
         PKCE pkce = new PKCE();
         pkce.setCodeChallenge("challenge");
@@ -48,49 +56,42 @@ public class TwitterAuthenticator {
         return pkce;
     }
 
-    public void authenticate() {
-        String authorizationUrl = getService().getAuthorizationUrl(getPkce(), "state");
 
-        LOG.infov("Requesting auth code at {0}", authorizationUrl);
-        Desktop desktop = Desktop.getDesktop();
-        try {
-            desktop.browse(new URI(authorizationUrl));
-        } catch (IOException | URISyntaxException e) {
-            LOG.error("Error trying to open auth code URL", e);
-        }
+    public TwitterCredentialsOAuth2 createToken(String accessToken, String refreshToken) {
+        return new TwitterCredentialsOAuth2(CONFIG.get(TwitterClientIDProperty.class),
+                CONFIG.get(TwitterClientSecretProperty.class),
+                accessToken,
+                refreshToken);
     }
 
-    public void processAuthCode(String authCode) {
-        OAuth2AccessToken accessToken;
+    @Override
+    public OAuth2AccessToken getAccessToken(String authCode) {
         try {
-            accessToken = getService().getAccessToken(getPkce(), authCode);
+            return getService().getAccessToken(getPkce(), authCode);
         } catch (IOException | ExecutionException | InterruptedException e) {
             LOG.error("Error trying to get access token", e);
-            return;
+            return null;
         }
-        if (accessToken == null) {
-            return;
-        }
-        TwitterCredentialsOAuth2 authToken = new TwitterCredentialsOAuth2(CONFIG.get(TwitterClientIDProperty.class),
-                CONFIG.get(TwitterClientSecretProperty.class),
-                accessToken.getAccessToken(),
-                accessToken.getRefreshToken());
-
-        // FIXME JWI use notifications
-        TwitterComponent component = ComponentsRegistry.get(TwitterComponent.class);
-        component.setAuthToken(authToken);
     }
 
-    public TwitterCredentialsOAuth2 refreshAccessToken(TwitterCredentialsOAuth2 token) {
-        OAuth2AccessToken accessToken;
+    public OAuth2AccessToken refreshAccessToken(String accountId, String refreshToken) {
         try {
-            accessToken = getService().refreshAccessToken(token.getTwitterOauth2RefreshToken());
-            token.setTwitterOauth2AccessToken(accessToken.getAccessToken());
-            token.setTwitterOauth2RefreshToken(accessToken.getRefreshToken());
-            return token;
+            return getService().refreshAccessToken(refreshToken);
         } catch (IOException | InterruptedException | ExecutionException e) {
             LOG.error("Error trying to get refresh access token", e);
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void handleAccessToken(OAuth2AccessToken accessToken) {
+        if (accessToken == null) {
+            return;
+        }
+        TwitterCredentialsOAuth2 authToken = createToken(accessToken.getAccessToken(), accessToken.getRefreshToken());
+        // FIXME JWI use notifications
+        TwitterComponent component = ComponentsRegistry.get(TwitterComponent.class);
+        component.setAuthToken(authToken);
+    }
+
 }
